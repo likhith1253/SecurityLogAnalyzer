@@ -1,0 +1,6 @@
+.*secret.*
+.*passwd.*
+.*confidential.*
+.*admin.*
+.*config.*
+/api/v1/credentials
