@@ -1,0 +1,273 @@
+================================================================================
+SECURITY LOG ANALYSIS REPORT
+================================================================================
+
+--- PERFORMANCE METRICS ---
+  Total Analysis Time: 0.10 seconds
+  Logs Processed: 300
+
+--- BLACKLIST SUMMARY ---
+  Total Blacklisted IPs: 12
+  Initially Blocked Logs: 104
+  Newly Blocked IPs: 12
+
+--- NEWLY BLOCKED IPs ---
+  125.214.87.156 | First Blocked: 2025-10-07 12:51:49 | Location: Seoul, KR
+  45.142.120.66 | First Blocked: 2025-10-07 13:01:49 | Location: Moscow, RU
+  103.253.145.88 | First Blocked: 2025-10-07 13:13:49 | Location: Beijing, CN
+  221.194.47.123 | First Blocked: 2025-10-07 13:17:49 | Location: Shanghai, CN
+  91.219.236.144 | First Blocked: 2025-10-07 13:21:49 | Location: St Petersburg, RU
+  89.248.165.97 | First Blocked: 2025-10-07 13:29:49 | Location: Novosibirsk, RU
+  104.244.42.88 | First Blocked: 2025-10-07 14:55:49 | Location: Los Angeles, US
+  185.220.101.42 | First Blocked: 2025-10-07 15:02:49 | Location: Frankfurt, DE
+  193.239.147.22 | First Blocked: 2025-10-07 15:07:49 | Location: Amsterdam, NL
+  195.123.220.77 | First Blocked: 2025-10-07 15:08:49 | Location: Warsaw, PL
+  139.59.10.99 | First Blocked: 2025-10-07 15:11:49 | Location: Bangalore, IN
+  178.62.193.55 | First Blocked: 2025-10-07 15:14:49 | Location: London, UK
+
+--- TOP RISK IPs ---
+  221.194.47.123 | Risk Score: 1.00 | Location: Shanghai, CN
+  91.219.236.144 | Risk Score: 1.00 | Location: St Petersburg, RU
+  193.239.147.22 | Risk Score: 1.00 | Location: Amsterdam, NL
+  89.248.165.97 | Risk Score: 1.00 | Location: Novosibirsk, RU
+  104.244.42.88 | Risk Score: 0.95 | Location: Los Angeles, US
+  103.253.145.88 | Risk Score: 0.95 | Location: Beijing, CN
+  45.142.120.66 | Risk Score: 0.90 | Location: Moscow, RU
+  195.123.220.77 | Risk Score: 0.85 | Location: Warsaw, PL
+  178.62.193.55 | Risk Score: 0.85 | Location: London, UK
+  139.59.10.99 | Risk Score: 0.85 | Location: Bangalore, IN
+
+--- SUSPICIOUS ACTIVITY BY COUNTRY ---
+  RU: 16 events
+  US: 15 events
+  IN: 11 events
+  CN: 10 events
+  UK: 8 events
+  PL: 8 events
+  NL: 8 events
+  DE: 5 events
+  SG: 3 events
+  KR: 3 events
+  FR: 1 events
+
+--- DETAILED SUSPICIOUS IP ACTIVITY ---
+
+IP: 178.62.193.55 | Location: London, UK | Risk Score: 0.85
+  Activity Log:
+    [2025-10-07 14:35:49] PATCH /api/keys -> 403 | Unauthorized access
+    [2025-10-07 14:36:49] PUT /dashboard -> 404 | Not found
+    [2025-10-07 14:38:49] GET /about -> 404 | Not found
+    [2025-10-07 14:40:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:52:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:53:49] PATCH /help -> 404 | Not found
+    [2025-10-07 15:13:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:14:49] GET /api/products -> 404 | Not found
+    [2025-10-07 15:36:49] GET /about -> 404 | Not found
+    [2025-10-07 15:37:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:40:49] POST /api/login -> 401 | Failed login attempt
+
+IP: 104.244.42.88 | Location: Los Angeles, US | Risk Score: 0.95
+  Activity Log:
+    [2025-10-07 14:28:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:30:49] PATCH /backup/restore -> 403 | Unauthorized access
+    [2025-10-07 14:43:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:46:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:47:49] POST /settings -> 404 | Not found
+    [2025-10-07 14:50:49] PATCH /private/data -> 403 | Unauthorized access
+    [2025-10-07 14:55:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:10:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:16:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:17:49] PATCH /settings -> 404 | Not found
+    [2025-10-07 15:19:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:27:49] DELETE /api/orders -> 404 | Not found
+    [2025-10-07 15:30:49] PATCH /config/database -> 403 | Unauthorized access
+    [2025-10-07 15:39:49] PUT /help -> 404 | Not found
+    [2025-10-07 15:42:49] PATCH /api/products -> 404 | Not found
+    [2025-10-07 15:44:49] PUT /profile -> 404 | Not found
+
+IP: 139.59.10.99 | Location: Bangalore, IN | Risk Score: 0.85
+  Activity Log:
+    [2025-10-07 14:26:49] PUT /about -> 404 | Not found
+    [2025-10-07 14:27:49] PATCH /about -> 404 | Not found
+    [2025-10-07 14:33:49] PATCH /api/users -> 404 | Not found
+    [2025-10-07 14:42:49] PATCH /api/users -> 404 | Not found
+    [2025-10-07 14:44:49] DELETE /settings -> 404 | Not found
+    [2025-10-07 14:54:49] GET /api/products -> 404 | Not found
+    [2025-10-07 14:57:49] PATCH /api/orders -> 404 | Not found
+    [2025-10-07 15:00:49] PATCH /admin/logs -> 403 | Unauthorized access
+    [2025-10-07 15:05:49] GET /credentials/list -> 403 | Unauthorized access
+    [2025-10-07 15:09:49] PUT /help -> 404 | Not found
+    [2025-10-07 15:11:49] POST /settings -> 404 | Not found
+    [2025-10-07 15:20:49] POST /credentials/list -> 403 | Unauthorized access
+    [2025-10-07 15:21:49] DELETE /dashboard -> 404 | Not found
+    [2025-10-07 15:28:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:32:49] POST /settings -> 404 | Not found
+    [2025-10-07 15:33:49] DELETE /about -> 404 | Not found
+    [2025-10-07 15:34:49] POST /api/login -> 401 | Failed login attempt
+
+IP: 195.123.220.77 | Location: Warsaw, PL | Risk Score: 0.85
+  Activity Log:
+    [2025-10-07 14:34:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:37:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:48:49] POST /contact -> 404 | Not found
+    [2025-10-07 14:49:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:51:49] GET /api/users -> 404 | Not found
+    [2025-10-07 14:59:49] PATCH /about -> 404 | Not found
+    [2025-10-07 15:06:49] GET /profile -> 404 | Not found
+    [2025-10-07 15:08:49] POST /api/products -> 404 | Not found
+    [2025-10-07 15:12:49] POST /api/orders -> 404 | Not found
+    [2025-10-07 15:15:49] PUT /api/keys -> 403 | Unauthorized access
+    [2025-10-07 15:18:49] PATCH /api/products -> 404 | Not found
+    [2025-10-07 15:22:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:24:49] PATCH /help -> 404 | Not found
+    [2025-10-07 15:25:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:26:49] DELETE /api/orders -> 404 | Not found
+    [2025-10-07 15:38:49] DELETE /settings -> 404 | Not found
+
+IP: 45.142.120.66 | Location: Moscow, RU | Risk Score: 0.90
+  Activity Log:
+    [2025-10-07 12:47:49] PATCH /contact -> 500 | Internal server error
+    [2025-10-07 12:58:49] POST /help -> 500 | Internal server error
+    [2025-10-07 12:59:49] GET /about -> 500 | Internal server error
+    [2025-10-07 13:01:49] POST /config/settings?file=../../../../etc/shadow -> 400 | SQL injection attempt detected
+    [2025-10-07 13:02:49] GET /settings -> 500 | Internal server error
+    [2025-10-07 13:05:49] GET /.env -> 403 | Confidential resource access
+    [2025-10-07 13:09:49] POST /api/exec?cmd=rm -rf / -> 400 | SQL injection attempt detected
+    [2025-10-07 13:19:49] PUT /dashboard -> 500 | Internal server error
+    [2025-10-07 13:20:49] DELETE /private/data -> 403 | Confidential resource access
+    [2025-10-07 13:23:49] POST /api/products -> 500 | Internal server error
+    [2025-10-07 13:39:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:45:49] DELETE /backup/restore -> 403 | Confidential resource access
+    [2025-10-07 13:49:49] POST /admin/../../../etc/passwd -> 400 | SQL injection attempt detected
+    [2025-10-07 13:50:49] DELETE /.env -> 403 | Confidential resource access
+    [2025-10-07 13:59:49] POST /api/products -> 500 | Internal server error
+    [2025-10-07 14:11:49] GET /api/users -> 500 | Internal server error
+    [2025-10-07 14:12:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:18:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:21:49] POST /api/users?id=1' OR '1'='1 -> 400 | SQL injection attempt detected
+    [2025-10-07 14:22:49] POST /api/products -> 500 | Internal server error
+    [2025-10-07 14:24:49] POST /api/login -> 401 | Failed login attempt
+
+IP: 103.253.145.88 | Location: Beijing, CN | Risk Score: 0.95
+  Activity Log:
+    [2025-10-07 12:52:49] GET /profile -> 500 | Internal server error
+    [2025-10-07 12:53:49] POST /api/exec?cmd=rm -rf / -> 400 | SQL injection attempt detected
+    [2025-10-07 12:55:49] POST /api/keys -> 403 | Confidential resource access
+    [2025-10-07 13:03:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:13:49] POST /api/users?id=1' OR '1'='1 -> 400 | SQL injection attempt detected
+    [2025-10-07 13:24:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:41:49] POST /api/exec?cmd=rm -rf / -> 400 | SQL injection attempt detected
+    [2025-10-07 13:48:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:58:49] PUT /contact -> 500 | Internal server error
+    [2025-10-07 14:04:49] DELETE /profile -> 500 | Internal server error
+    [2025-10-07 14:06:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:08:49] DELETE /api/products -> 500 | Internal server error
+    [2025-10-07 14:09:49] POST /.git/config -> 400 | SQL injection attempt detected
+    [2025-10-07 14:16:49] PUT /api/orders -> 500 | Internal server error
+    [2025-10-07 14:17:49] POST /api/users?id=1' OR '1'='1 -> 400 | SQL injection attempt detected
+
+IP: 91.219.236.144 | Location: St Petersburg, RU | Risk Score: 1.00
+  Activity Log:
+    [2025-10-07 12:46:49] PATCH /help -> 500 | Internal server error
+    [2025-10-07 12:50:49] DELETE /credentials/list -> 403 | Confidential resource access
+    [2025-10-07 12:54:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 12:57:49] POST /api/users?id=1' OR '1'='1 -> 400 | SQL injection attempt detected
+    [2025-10-07 13:14:49] DELETE /settings -> 500 | Internal server error
+    [2025-10-07 13:16:49] DELETE /settings -> 500 | Internal server error
+    [2025-10-07 13:21:49] POST /api/users?id=1' OR '1'='1 -> 400 | SQL injection attempt detected
+    [2025-10-07 13:30:49] POST /private/data -> 403 | Confidential resource access
+    [2025-10-07 13:33:49] POST /api/exec?cmd=rm -rf / -> 400 | SQL injection attempt detected
+    [2025-10-07 13:38:49] PUT /help -> 500 | Internal server error
+    [2025-10-07 13:40:49] DELETE /private/data -> 403 | Confidential resource access
+    [2025-10-07 13:46:49] PUT /api/users -> 500 | Internal server error
+    [2025-10-07 13:51:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:52:49] PATCH /api/products -> 500 | Internal server error
+    [2025-10-07 13:53:49] POST /config/settings?file=../../../../etc/shadow -> 400 | SQL injection attempt detected
+    [2025-10-07 14:01:49] POST /.git/config -> 400 | SQL injection attempt detected
+    [2025-10-07 14:13:49] POST /admin/../../../etc/passwd -> 400 | SQL injection attempt detected
+    [2025-10-07 14:19:49] PATCH /api/orders -> 500 | Internal server error
+
+IP: 125.214.87.156 | Location: Seoul, KR | Risk Score: 0.85
+  Activity Log:
+    [2025-10-07 12:45:49] DELETE /api/keys -> 403 | Confidential resource access
+    [2025-10-07 12:49:49] POST /config/settings?file=../../../../etc/shadow -> 400 | SQL injection attempt detected
+    [2025-10-07 12:51:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:04:49] POST /profile -> 500 | Internal server error
+    [2025-10-07 13:06:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:07:49] PATCH /api/users -> 500 | Internal server error
+    [2025-10-07 13:12:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:15:49] POST /api/keys -> 403 | Confidential resource access
+    [2025-10-07 13:25:49] PATCH /.env -> 403 | Confidential resource access
+    [2025-10-07 13:28:49] PATCH /profile -> 500 | Internal server error
+    [2025-10-07 13:36:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:42:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:44:49] PATCH /settings -> 500 | Internal server error
+    [2025-10-07 13:56:49] DELETE /settings -> 500 | Internal server error
+    [2025-10-07 14:07:49] GET /profile -> 500 | Internal server error
+    [2025-10-07 14:23:49] PATCH /api/orders -> 500 | Internal server error
+
+IP: 221.194.47.123 | Location: Shanghai, CN | Risk Score: 1.00
+  Activity Log:
+    [2025-10-07 12:48:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 12:56:49] PUT /api/orders -> 500 | Internal server error
+    [2025-10-07 13:00:49] PATCH /secret/keys -> 403 | Confidential resource access
+    [2025-10-07 13:11:49] PUT /about -> 500 | Internal server error
+    [2025-10-07 13:17:49] POST /config/settings?file=../../../../etc/shadow -> 400 | SQL injection attempt detected
+    [2025-10-07 13:18:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:22:49] PUT /api/orders -> 500 | Internal server error
+    [2025-10-07 13:31:49] PUT /dashboard -> 500 | Internal server error
+    [2025-10-07 13:32:49] DELETE /profile -> 500 | Internal server error
+    [2025-10-07 13:37:49] POST /.git/config -> 400 | SQL injection attempt detected
+    [2025-10-07 13:43:49] GET /api/orders -> 500 | Internal server error
+    [2025-10-07 13:47:49] POST /help -> 500 | Internal server error
+    [2025-10-07 13:55:49] GET /admin/logs -> 403 | Confidential resource access
+    [2025-10-07 14:00:49] PUT /backup/restore -> 403 | Confidential resource access
+    [2025-10-07 14:02:49] GET /api/orders -> 500 | Internal server error
+    [2025-10-07 14:03:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:10:49] DELETE /admin/users -> 403 | Confidential resource access
+    [2025-10-07 14:14:49] PUT /api/products -> 500 | Internal server error
+    [2025-10-07 14:15:49] POST /admin/logs -> 403 | Confidential resource access
+
+IP: 193.239.147.22 | Location: Amsterdam, NL | Risk Score: 1.00
+  Activity Log:
+    [2025-10-07 14:25:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:29:49] GET /api/orders -> 404 | Not found
+    [2025-10-07 14:31:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 14:32:49] GET /api/products -> 404 | Not found
+    [2025-10-07 14:41:49] PATCH /api/orders -> 404 | Not found
+    [2025-10-07 14:56:49] GET /profile -> 404 | Not found
+    [2025-10-07 15:04:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:07:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:29:49] POST /contact -> 404 | Not found
+    [2025-10-07 15:41:49] DELETE /api/orders -> 404 | Not found
+    [2025-10-07 15:43:49] POST /api/login -> 401 | Failed login attempt
+
+IP: 185.220.101.42 | Location: Frankfurt, DE | Risk Score: 0.85
+  Activity Log:
+    [2025-10-07 14:39:49] PATCH /settings -> 404 | Not found
+    [2025-10-07 14:45:49] PATCH /secret/keys -> 403 | Unauthorized access
+    [2025-10-07 14:58:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:01:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:02:49] DELETE /settings -> 404 | Not found
+    [2025-10-07 15:03:49] PATCH /about -> 404 | Not found
+    [2025-10-07 15:23:49] PATCH /api/products -> 404 | Not found
+    [2025-10-07 15:31:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 15:35:49] PATCH /admin/users -> 403 | Unauthorized access
+
+IP: 89.248.165.97 | Location: Novosibirsk, RU | Risk Score: 1.00
+  Activity Log:
+    [2025-10-07 13:08:49] DELETE /contact -> 500 | Internal server error
+    [2025-10-07 13:10:49] PATCH /admin/users -> 403 | Confidential resource access
+    [2025-10-07 13:26:49] GET /contact -> 500 | Internal server error
+    [2025-10-07 13:27:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:29:49] POST /admin/../../../etc/passwd -> 400 | SQL injection attempt detected
+    [2025-10-07 13:34:49] GET /help -> 500 | Internal server error
+    [2025-10-07 13:35:49] PUT /secret/keys -> 403 | Confidential resource access
+    [2025-10-07 13:54:49] POST /api/login -> 401 | Failed login attempt
+    [2025-10-07 13:57:49] POST /api/exec?cmd=rm -rf / -> 400 | SQL injection attempt detected
+    [2025-10-07 14:05:49] PATCH /credentials/list -> 403 | Confidential resource access
+    [2025-10-07 14:20:49] DELETE /secret/keys -> 403 | Confidential resource access
+
+================================================================================
+END OF REPORT
+================================================================================
