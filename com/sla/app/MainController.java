@@ -70,7 +70,8 @@ public class MainController {
             System.out.println("1. Run Full Forensic Analysis");
             System.out.println("2. Trace IP Activity");
             System.out.println("3. Query Logs by Time Range");
-            System.out.println("4. Exit");
+            System.out.println("4. Red-Black Tree Operations Demo");
+            System.out.println("5. Exit");
             System.out.print(AnsiColors.YELLOW + "Select an option: " + AnsiColors.RESET);
             
             String choice = scanner.nextLine();
@@ -85,6 +86,9 @@ public class MainController {
                     queryLogsByTimeRange(accessControl, queryLogger);
                     break;
                 case "4":
+                    demonstrateRBTOperations(queryLogger);
+                    break;
+                case "5":
                     System.out.println(AnsiColors.CYAN + "Exiting Security Log Analyzer." + AnsiColors.RESET);
                     scanner.close();
                     return;
@@ -398,5 +402,156 @@ public class MainController {
         } catch (IOException e) {
             System.err.println(AnsiColors.RED + "Error saving suspicious.txt file: " + e.getMessage() + AnsiColors.RESET);
         }
+    }
+    
+    private void demonstrateRBTOperations(UserQueryLogger queryLogger) {
+        queryLogger.log(currentUser, "Demonstrated Red-Black Tree Operations");
+        
+        ConsoleUIHelper.printSectionTitle("RED-BLACK TREE OPERATIONS DEMONSTRATION");
+        System.out.println(AnsiColors.CYAN + "Loading logs into Red-Black Tree..." + AnsiColors.RESET);
+        
+        AccessLogParser logParser = new AccessLogParser();
+        List<LogRecord> allLogs = logParser.parseLogs(appConfig.getLogFile());
+        
+        SelfBalancingSearchTree<LogRecord> logTree = new SelfBalancingSearchTree<>();
+        long insertStart = System.nanoTime();
+        for (LogRecord record : allLogs) {
+            logTree.insert(record);
+        }
+        long insertEnd = System.nanoTime();
+        
+        System.out.println(AnsiColors.GREEN + "✔ Tree built successfully!\n" + AnsiColors.RESET);
+        
+        // Display tree statistics
+        System.out.println(AnsiColors.YELLOW_BOLD + "=== TREE STATISTICS ===" + AnsiColors.RESET);
+        System.out.println(String.format("  Total Nodes: %d", logTree.size()));
+        System.out.println(String.format("  Tree Height: %d", logTree.getHeight()));
+        System.out.println(String.format("  Black Height: %d", logTree.getBlackHeight()));
+        System.out.println(String.format("  Insertion Time: %.3f ms", (insertEnd - insertStart) / 1_000_000.0));
+        System.out.println(String.format("  Avg Time per Insert: %.3f μs", (insertEnd - insertStart) / (double) allLogs.size() / 1000.0));
+        
+        // Validate tree
+        System.out.println(AnsiColors.YELLOW_BOLD + "\n=== TREE VALIDATION ===" + AnsiColors.RESET);
+        boolean isValid = logTree.validateTree();
+        if (isValid) {
+            System.out.println(AnsiColors.GREEN_BOLD + "  ✓ Tree satisfies all Red-Black Tree properties!" + AnsiColors.RESET);
+            System.out.println(AnsiColors.GREEN + "    ✓ Root is black" + AnsiColors.RESET);
+            System.out.println(AnsiColors.GREEN + "    ✓ Red nodes have black children" + AnsiColors.RESET);
+            System.out.println(AnsiColors.GREEN + "    ✓ All paths have equal black height" + AnsiColors.RESET);
+        } else {
+            System.out.println(AnsiColors.RED_BOLD + "  ✗ Tree validation failed!" + AnsiColors.RESET);
+        }
+        
+        // Demonstrate min/max operations
+        System.out.println(AnsiColors.YELLOW_BOLD + "\n=== MIN/MAX OPERATIONS ===" + AnsiColors.RESET);
+        LogRecord minLog = logTree.findMinimum();
+        LogRecord maxLog = logTree.findMaximum();
+        
+        if (minLog != null && maxLog != null) {
+            System.out.println(String.format("  Earliest Log: %s", 
+                minLog.timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+            System.out.println(String.format("  Latest Log:   %s", 
+                maxLog.timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+        }
+        
+        // Demonstrate search operation
+        System.out.println(AnsiColors.YELLOW_BOLD + "\n=== SEARCH OPERATION ===" + AnsiColors.RESET);
+        if (!allLogs.isEmpty()) {
+            LogRecord targetLog = allLogs.get(allLogs.size() / 2);
+            long searchStart = System.nanoTime();
+            LogRecord found = logTree.search(targetLog);
+            long searchEnd = System.nanoTime();
+            
+            if (found != null) {
+                System.out.println(AnsiColors.GREEN + "  ✓ Search successful!" + AnsiColors.RESET);
+                System.out.println(String.format("    Target: %s from %s", 
+                    targetLog.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                    targetLog.ipSourceAddress));
+                System.out.println(String.format("    Search Time: %.3f μs (O(log N))", 
+                    (searchEnd - searchStart) / 1000.0));
+            }
+        }
+        
+        // Demonstrate predecessor/successor
+        System.out.println(AnsiColors.YELLOW_BOLD + "\n=== PREDECESSOR/SUCCESSOR OPERATIONS ===" + AnsiColors.RESET);
+        if (allLogs.size() >= 3) {
+            LogRecord middleLog = allLogs.get(allLogs.size() / 2);
+            LogRecord predecessor = logTree.findPredecessor(middleLog);
+            LogRecord successor = logTree.findSuccessor(middleLog);
+            
+            if (predecessor != null) {
+                System.out.println(String.format("  Predecessor of %s: %s", 
+                    middleLog.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                    predecessor.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+            }
+            if (successor != null) {
+                System.out.println(String.format("  Successor of %s: %s", 
+                    middleLog.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                    successor.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+            }
+        }
+        
+        // Demonstrate range query
+        System.out.println(AnsiColors.YELLOW_BOLD + "\n=== RANGE QUERY OPERATION ===" + AnsiColors.RESET);
+        if (minLog != null && maxLog != null) {
+            LocalDateTime startTime = minLog.timestamp.plusMinutes(30);
+            LocalDateTime endTime = startTime.plusHours(1);
+            
+            LogRecord startKey = new LogRecord(startTime, "", "", "", "", 0, "");
+            LogRecord endKey = new LogRecord(endTime, "", "", "", "", 0, "");
+            
+            long rangeStart = System.nanoTime();
+            List<LogRecord> rangeResults = logTree.rangeQuery(startKey, endKey);
+            long rangeEnd = System.nanoTime();
+            
+            System.out.println(String.format("  Range: %s to %s", 
+                startTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                endTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+            System.out.println(String.format("  Results: %d logs found", rangeResults.size()));
+            System.out.println(String.format("  Query Time: %.3f ms (O(log N + k))", 
+                (rangeEnd - rangeStart) / 1_000_000.0));
+        }
+        
+        // Demonstrate delete operation
+        System.out.println(AnsiColors.YELLOW_BOLD + "\n=== DELETE OPERATION ===" + AnsiColors.RESET);
+        if (!allLogs.isEmpty()) {
+            LogRecord toDelete = allLogs.get(0);
+            int sizeBefore = logTree.size();
+            
+            long deleteStart = System.nanoTime();
+            boolean deleted = logTree.delete(toDelete);
+            long deleteEnd = System.nanoTime();
+            
+            int sizeAfter = logTree.size();
+            
+            if (deleted) {
+                System.out.println(AnsiColors.GREEN + "  ✓ Delete successful!" + AnsiColors.RESET);
+                System.out.println(String.format("    Deleted: Log from %s", 
+                    toDelete.timestamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))));
+                System.out.println(String.format("    Size: %d → %d", sizeBefore, sizeAfter));
+                System.out.println(String.format("    Delete Time: %.3f μs (O(log N))", 
+                    (deleteEnd - deleteStart) / 1000.0));
+                
+                // Validate tree after deletion
+                boolean stillValid = logTree.validateTree();
+                if (stillValid) {
+                    System.out.println(AnsiColors.GREEN + "    ✓ Tree still valid after deletion!" + AnsiColors.RESET);
+                } else {
+                    System.out.println(AnsiColors.RED + "    ✗ Tree validation failed after deletion!" + AnsiColors.RESET);
+                }
+            }
+        }
+        
+        // Display complexity summary
+        System.out.println(AnsiColors.CYAN_BOLD + "\n=== TIME COMPLEXITY SUMMARY ===" + AnsiColors.RESET);
+        System.out.println("  Insert:              O(log N)");
+        System.out.println("  Delete:              O(log N)");
+        System.out.println("  Search:              O(log N)");
+        System.out.println("  Find Min/Max:        O(log N)");
+        System.out.println("  Predecessor/Successor: O(log N)");
+        System.out.println("  Range Query:         O(log N + k)");
+        System.out.println("  Tree Validation:     O(N)");
+        
+        System.out.println(AnsiColors.GREEN_BOLD + "\n✔ Red-Black Tree demonstration complete!" + AnsiColors.RESET);
     }
 }
