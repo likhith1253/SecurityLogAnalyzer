@@ -165,7 +165,9 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
                     sibling = node.parent.right;
                 }
                 
-                if (getColor(sibling.left) == NodeColor.BLACK && 
+                if (sibling == null) {
+                    node = node.parent;
+                } else if (getColor(sibling.left) == NodeColor.BLACK && 
                     getColor(sibling.right) == NodeColor.BLACK) {
                     sibling.color = NodeColor.RED;
                     node = node.parent;
@@ -176,10 +178,12 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
                         rotateRight(sibling);
                         sibling = node.parent.right;
                     }
-                    sibling.color = node.parent.color;
-                    node.parent.color = NodeColor.BLACK;
-                    if (sibling.right != null) sibling.right.color = NodeColor.BLACK;
-                    rotateLeft(node.parent);
+                    if (sibling != null) {
+                        sibling.color = node.parent.color;
+                        node.parent.color = NodeColor.BLACK;
+                        if (sibling.right != null) sibling.right.color = NodeColor.BLACK;
+                        rotateLeft(node.parent);
+                    }
                     node = root;
                 }
             } else {
@@ -192,7 +196,9 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
                     sibling = node.parent.left;
                 }
                 
-                if (getColor(sibling.right) == NodeColor.BLACK && 
+                if (sibling == null) {
+                    node = node.parent;
+                } else if (getColor(sibling.right) == NodeColor.BLACK && 
                     getColor(sibling.left) == NodeColor.BLACK) {
                     sibling.color = NodeColor.RED;
                     node = node.parent;
@@ -203,10 +209,12 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
                         rotateLeft(sibling);
                         sibling = node.parent.left;
                     }
-                    sibling.color = node.parent.color;
-                    node.parent.color = NodeColor.BLACK;
-                    if (sibling.left != null) sibling.left.color = NodeColor.BLACK;
-                    rotateRight(node.parent);
+                    if (sibling != null) {
+                        sibling.color = node.parent.color;
+                        node.parent.color = NodeColor.BLACK;
+                        if (sibling.left != null) sibling.left.color = NodeColor.BLACK;
+                        rotateRight(node.parent);
+                    }
                     node = root;
                 }
             }
