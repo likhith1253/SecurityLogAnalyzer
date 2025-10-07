@@ -14,7 +14,6 @@ public class SampleDataGenerator {
     private static final SecureRandom random = new SecureRandom();
     
     public static void generateSampleFiles(AppConfiguration config) {
-        // Generate sample files only if they don't exist
         generateUsersFile(config.getUsersFile());
         generateGeoDataFile(config.getGeoDataFile());
         generateConfidentialPatternsFile(config.getConfidentialPatternsFile());
@@ -43,13 +42,69 @@ public class SampleDataGenerator {
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("ip_prefix,country,city\n");
-            writer.write("192.168.1,USA,New York\n");
-            writer.write("10.0.0,USA,San Francisco\n");
-            writer.write("172.16.0,UK,London\n");
-            writer.write("103.137.185,CN,Beijing\n");
-            writer.write("104.248.4,DE,Berlin\n");
-            writer.write("5.188.86,RU,Moscow\n");
-            writer.write("81.169.144,DE,Frankfurt\n");
+            
+            // 50+ diverse geolocations from around the world
+            String[][] geoData = {
+                {"45.142.120", "RU", "Moscow"},
+                {"185.220.101", "DE", "Frankfurt"},
+                {"91.219.236", "RU", "St Petersburg"},
+                {"89.248.165", "RU", "Novosibirsk"},
+                {"193.239.147", "NL", "Amsterdam"},
+                {"104.244.42", "US", "Los Angeles"},
+                {"167.94.138", "US", "New York"},
+                {"198.98.54", "US", "Chicago"},
+                {"51.89.115", "FR", "Paris"},
+                {"178.62.193", "UK", "London"},
+                {"195.123.220", "PL", "Warsaw"},
+                {"46.101.126", "DE", "Berlin"},
+                {"159.89.214", "US", "San Francisco"},
+                {"209.141.45", "US", "Dallas"},
+                {"142.93.125", "CA", "Toronto"},
+                {"188.166.89", "SG", "Singapore"},
+                {"139.59.10", "IN", "Bangalore"},
+                {"103.253.145", "CN", "Beijing"},
+                {"221.194.47", "CN", "Shanghai"},
+                {"125.214.87", "KR", "Seoul"},
+                {"210.15.142", "JP", "Tokyo"},
+                {"114.119.136", "CN", "Shenzhen"},
+                {"180.163.220", "CN", "Hangzhou"},
+                {"203.113.162", "TH", "Bangkok"},
+                {"118.107.243", "VN", "Hanoi"},
+                {"49.156.23", "IN", "Mumbai"},
+                {"122.161.93", "IN", "Delhi"},
+                {"182.73.214", "IN", "Hyderabad"},
+                {"202.47.38", "AU", "Sydney"},
+                {"103.28.121", "AU", "Melbourne"},
+                {"41.60.234", "ZA", "Johannesburg"},
+                {"105.112.33", "ZA", "Cape Town"},
+                {"197.234.221", "NG", "Lagos"},
+                {"196.201.214", "EG", "Cairo"},
+                {"200.98.133", "BR", "Sao Paulo"},
+                {"186.148.172", "BR", "Rio de Janeiro"},
+                {"190.14.36", "AR", "Buenos Aires"},
+                {"187.188.165", "MX", "Mexico City"},
+                {"177.54.148", "BR", "Brasilia"},
+                {"201.216.243", "CL", "Santiago"},
+                {"85.132.6", "ES", "Madrid"},
+                {"95.216.145", "FI", "Helsinki"},
+                {"217.12.210", "SE", "Stockholm"},
+                {"80.94.92", "NO", "Oslo"},
+                {"213.108.105", "IT", "Rome"},
+                {"151.236.219", "IT", "Milan"},
+                {"77.37.160", "CH", "Zurich"},
+                {"87.230.14", "AT", "Vienna"},
+                {"78.142.19", "RO", "Bucharest"},
+                {"212.58.244", "TR", "Istanbul"},
+                {"31.145.191", "UA", "Kyiv"},
+                {"93.170.122", "GR", "Athens"},
+                {"192.168.1", "US", "Private Network"},
+                {"10.0.0", "US", "Private Network"},
+                {"172.16.5", "US", "Private Network"}
+            };
+            
+            for (String[] geo : geoData) {
+                writer.write(String.format("%s,%s,%s\n", geo[0], geo[1], geo[2]));
+            }
         } catch (IOException e) {
             System.err.println(AnsiColors.RED + "Warning: Could not generate " + filePath + ": " + e.getMessage() + AnsiColors.RESET);
         }
@@ -67,6 +122,10 @@ public class SampleDataGenerator {
             writer.write("/private\n");
             writer.write("\\.env\n");
             writer.write("/credentials\n");
+            writer.write("/api/keys\n");
+            writer.write("/database\n");
+            writer.write("/backup\n");
+            writer.write("/internal\n");
         } catch (IOException e) {
             System.err.println(AnsiColors.RED + "Warning: Could not generate " + filePath + ": " + e.getMessage() + AnsiColors.RESET);
         }
@@ -77,29 +136,126 @@ public class SampleDataGenerator {
             return;
         }
         
-        String[] ips = {"192.168.1.10", "10.0.0.5", "172.16.0.20", "103.137.185.155", "104.248.4.72", "5.188.86.139"};
-        String[] users = {"alice", "bob", "charlie", "-", "-"};
-        String[] methods = {"GET", "POST", "PUT", "DELETE"};
-        String[] paths = {"/api/login", "/admin/dashboard", "/config/settings", "/api/data", "/secret/key", "/public/info"};
-        int[] statusCodes = {200, 201, 400, 401, 403, 404, 500};
-        String[] details = {"Success", "Failed login", "SQL injection attempt", "Traversal attempt", "Unauthorized access"};
+        // Create diverse IP addresses with different threat profiles
+        String[] highThreatIPs = {
+            "45.142.120.66", "91.219.236.144", "89.248.165.97",
+            "103.253.145.88", "221.194.47.123", "125.214.87.156"
+        };
+        
+        String[] mediumThreatIPs = {
+            "185.220.101.42", "193.239.147.22", "104.244.42.88",
+            "178.62.193.55", "195.123.220.77", "139.59.10.99"
+        };
+        
+        String[] lowThreatIPs = {
+            "167.94.138.12", "198.98.54.23", "51.89.115.45",
+            "159.89.214.67", "142.93.125.34", "188.166.89.21",
+            "192.168.1.10", "10.0.0.5", "172.16.5.88"
+        };
+        
+        String[] normalUsers = {"alice", "bob", "charlie", "david", "emma"};
+        String[] methods = {"GET", "POST", "PUT", "DELETE", "PATCH"};
+        
+        String[] normalPaths = {
+            "/api/users", "/api/products", "/api/orders", "/dashboard",
+            "/profile", "/settings", "/help", "/about", "/contact"
+        };
+        
+        String[] sensitivePaths = {
+            "/admin/users", "/admin/logs", "/config/database", "/secret/keys",
+            "/private/data", "/credentials/list", "/api/keys", "/backup/restore",
+            "/.env", "/internal/metrics"
+        };
+        
+        String[] attackPaths = {
+            "/admin/../../../etc/passwd", "/api/users?id=1' OR '1'='1",
+            "/config/settings?file=../../../../etc/shadow",
+            "/api/exec?cmd=rm -rf /", "/.git/config"
+        };
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            LocalDateTime baseTime = LocalDateTime.now().minusHours(2);
+            LocalDateTime baseTime = LocalDateTime.now().minusHours(6);
+            int logCount = 0;
             
+            // Generate high-threat activity (100 logs)
             for (int i = 0; i < 100; i++) {
-                LocalDateTime timestamp = baseTime.plusMinutes(i);
-                String ip = ips[random.nextInt(ips.length)];
-                String user = users[random.nextInt(users.length)];
-                String method = methods[random.nextInt(methods.length)];
-                String path = paths[random.nextInt(paths.length)];
-                int status = statusCodes[random.nextInt(statusCodes.length)];
-                String detail = details[random.nextInt(details.length)];
+                String ip = highThreatIPs[random.nextInt(highThreatIPs.length)];
+                LocalDateTime timestamp = baseTime.plusMinutes(logCount++);
                 
-                writer.write(String.format("%s,%s,%s,%s,%s,%d,%s\n",
-                    timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
-                    ip, user, method, path, status, detail));
+                if (i % 5 == 0) {
+                    // Confidential resource access
+                    String path = sensitivePaths[random.nextInt(sensitivePaths.length)];
+                    writer.write(String.format("%s,%s,-,%s,%s,%d,Confidential resource access\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, methods[random.nextInt(methods.length)], path, 403));
+                } else if (i % 4 == 0) {
+                    // SQL injection attempts
+                    String path = attackPaths[random.nextInt(attackPaths.length)];
+                    writer.write(String.format("%s,%s,-,POST,%s,%d,SQL injection attempt detected\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, path, 400));
+                } else if (i % 3 == 0) {
+                    // Failed login attempts
+                    writer.write(String.format("%s,%s,-,POST,/api/login,%d,Failed login attempt\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, 401));
+                } else {
+                    // Server errors
+                    String path = normalPaths[random.nextInt(normalPaths.length)];
+                    writer.write(String.format("%s,%s,-,%s,%s,%d,Internal server error\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, methods[random.nextInt(methods.length)], path, 500));
+                }
             }
+            
+            // Generate medium-threat activity (80 logs)
+            for (int i = 0; i < 80; i++) {
+                String ip = mediumThreatIPs[random.nextInt(mediumThreatIPs.length)];
+                LocalDateTime timestamp = baseTime.plusMinutes(logCount++);
+                
+                if (i % 3 == 0) {
+                    // Failed login
+                    writer.write(String.format("%s,%s,-,POST,/api/login,%d,Failed login attempt\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, 401));
+                } else if (i % 5 == 0) {
+                    // Unauthorized access
+                    String path = sensitivePaths[random.nextInt(sensitivePaths.length)];
+                    writer.write(String.format("%s,%s,-,%s,%s,%d,Unauthorized access\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, methods[random.nextInt(methods.length)], path, 403));
+                } else {
+                    // 404 errors
+                    String path = normalPaths[random.nextInt(normalPaths.length)];
+                    writer.write(String.format("%s,%s,%s,%s,%s,%d,Not found\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, normalUsers[random.nextInt(normalUsers.length)],
+                        methods[random.nextInt(methods.length)], path, 404));
+                }
+            }
+            
+            // Generate low-threat/normal activity (120 logs)
+            for (int i = 0; i < 120; i++) {
+                String ip = lowThreatIPs[random.nextInt(lowThreatIPs.length)];
+                LocalDateTime timestamp = baseTime.plusMinutes(logCount++);
+                
+                if (i % 10 == 0) {
+                    // Occasional 404
+                    String path = normalPaths[random.nextInt(normalPaths.length)];
+                    writer.write(String.format("%s,%s,%s,GET,%s,%d,Not found\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, normalUsers[random.nextInt(normalUsers.length)], path, 404));
+                } else {
+                    // Normal successful requests
+                    String path = normalPaths[random.nextInt(normalPaths.length)];
+                    String user = normalUsers[random.nextInt(normalUsers.length)];
+                    int status = (i % 2 == 0) ? 200 : 201;
+                    writer.write(String.format("%s,%s,%s,%s,%s,%d,Success\n",
+                        timestamp.format(DateTimeFormatter.ISO_DATE_TIME),
+                        ip, user, methods[random.nextInt(methods.length)], path, status));
+                }
+            }
+            
         } catch (IOException e) {
             System.err.println(AnsiColors.RED + "Warning: Could not generate " + filePath + ": " + e.getMessage() + AnsiColors.RESET);
         }

@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Self-Balancing Search Tree implementation using Red-Black Tree properties.
- * Provides O(log N) insertion and search operations.
+ * Complete Red-Black Tree implementation with all standard operations.
+ * Provides O(log N) insertion, deletion, and search operations.
  * Provides O(log N + k) range query operations where k is the number of results.
+ * 
+ * Red-Black Tree Properties:
+ * 1. Every node is either red or black
+ * 2. Root is always black
+ * 3. All leaves (null) are black
+ * 4. Red nodes cannot have red children
+ * 5. All paths from root to leaves have the same number of black nodes
  */
 public class SelfBalancingSearchTree<T extends Comparable<T>> {
     
@@ -29,9 +36,11 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
     }
     
     private TreeNode<T> root;
+    private int size;
     
     public SelfBalancingSearchTree() {
         this.root = null;
+        this.size = 0;
     }
     
     /**
@@ -44,6 +53,7 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
         if (root == null) {
             root = newNode;
             root.color = NodeColor.BLACK;
+            size++;
             return;
         }
         
@@ -66,7 +76,146 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
             parent.right = newNode;
         }
         
+        size++;
         fixInsert(newNode);
+    }
+    
+    /**
+     * Delete a node from the tree.
+     * Time complexity: O(log N)
+     */
+    public boolean delete(T key) {
+        TreeNode<T> nodeToDelete = searchNode(root, key);
+        if (nodeToDelete == null) {
+            return false;
+        }
+        
+        deleteNode(nodeToDelete);
+        size--;
+        return true;
+    }
+    
+    private void deleteNode(TreeNode<T> node) {
+        TreeNode<T> replacement;
+        TreeNode<T> child;
+        NodeColor originalColor = node.color;
+        
+        if (node.left == null) {
+            child = node.right;
+            transplant(node, node.right);
+            if (child != null && originalColor == NodeColor.BLACK) {
+                fixDelete(child);
+            }
+        } else if (node.right == null) {
+            child = node.left;
+            transplant(node, node.left);
+            if (child != null && originalColor == NodeColor.BLACK) {
+                fixDelete(child);
+            }
+        } else {
+            replacement = findMin(node.right);
+            originalColor = replacement.color;
+            child = replacement.right;
+            
+            if (replacement.parent == node) {
+                if (child != null) child.parent = replacement;
+            } else {
+                transplant(replacement, replacement.right);
+                replacement.right = node.right;
+                if (replacement.right != null) {
+                    replacement.right.parent = replacement;
+                }
+            }
+            
+            transplant(node, replacement);
+            replacement.left = node.left;
+            if (replacement.left != null) {
+                replacement.left.parent = replacement;
+            }
+            replacement.color = node.color;
+            
+            if (child != null && originalColor == NodeColor.BLACK) {
+                fixDelete(child);
+            }
+        }
+    }
+    
+    private void transplant(TreeNode<T> oldNode, TreeNode<T> newNode) {
+        if (oldNode.parent == null) {
+            root = newNode;
+        } else if (oldNode == oldNode.parent.left) {
+            oldNode.parent.left = newNode;
+        } else {
+            oldNode.parent.right = newNode;
+        }
+        if (newNode != null) {
+            newNode.parent = oldNode.parent;
+        }
+    }
+    
+    private void fixDelete(TreeNode<T> node) {
+        while (node != root && getColor(node) == NodeColor.BLACK) {
+            if (node == node.parent.left) {
+                TreeNode<T> sibling = node.parent.right;
+                
+                if (getColor(sibling) == NodeColor.RED) {
+                    sibling.color = NodeColor.BLACK;
+                    node.parent.color = NodeColor.RED;
+                    rotateLeft(node.parent);
+                    sibling = node.parent.right;
+                }
+                
+                if (getColor(sibling.left) == NodeColor.BLACK && 
+                    getColor(sibling.right) == NodeColor.BLACK) {
+                    sibling.color = NodeColor.RED;
+                    node = node.parent;
+                } else {
+                    if (getColor(sibling.right) == NodeColor.BLACK) {
+                        if (sibling.left != null) sibling.left.color = NodeColor.BLACK;
+                        sibling.color = NodeColor.RED;
+                        rotateRight(sibling);
+                        sibling = node.parent.right;
+                    }
+                    sibling.color = node.parent.color;
+                    node.parent.color = NodeColor.BLACK;
+                    if (sibling.right != null) sibling.right.color = NodeColor.BLACK;
+                    rotateLeft(node.parent);
+                    node = root;
+                }
+            } else {
+                TreeNode<T> sibling = node.parent.left;
+                
+                if (getColor(sibling) == NodeColor.RED) {
+                    sibling.color = NodeColor.BLACK;
+                    node.parent.color = NodeColor.RED;
+                    rotateRight(node.parent);
+                    sibling = node.parent.left;
+                }
+                
+                if (getColor(sibling.right) == NodeColor.BLACK && 
+                    getColor(sibling.left) == NodeColor.BLACK) {
+                    sibling.color = NodeColor.RED;
+                    node = node.parent;
+                } else {
+                    if (getColor(sibling.left) == NodeColor.BLACK) {
+                        if (sibling.right != null) sibling.right.color = NodeColor.BLACK;
+                        sibling.color = NodeColor.RED;
+                        rotateLeft(sibling);
+                        sibling = node.parent.left;
+                    }
+                    sibling.color = node.parent.color;
+                    node.parent.color = NodeColor.BLACK;
+                    if (sibling.left != null) sibling.left.color = NodeColor.BLACK;
+                    rotateRight(node.parent);
+                    node = root;
+                }
+            }
+        }
+        if (node != null) node.color = NodeColor.BLACK;
+    }
+    
+    private NodeColor getColor(TreeNode<T> node) {
+        return node == null ? NodeColor.BLACK : node.color;
     }
     
     /**
@@ -97,6 +246,78 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
     }
     
     /**
+     * Find minimum element in tree.
+     * Time complexity: O(log N)
+     */
+    public T findMinimum() {
+        if (root == null) return null;
+        return findMin(root).key;
+    }
+    
+    private TreeNode<T> findMin(TreeNode<T> node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+    
+    /**
+     * Find maximum element in tree.
+     * Time complexity: O(log N)
+     */
+    public T findMaximum() {
+        if (root == null) return null;
+        return findMax(root).key;
+    }
+    
+    private TreeNode<T> findMax(TreeNode<T> node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+    
+    /**
+     * Find predecessor of a given key.
+     * Time complexity: O(log N)
+     */
+    public T findPredecessor(T key) {
+        TreeNode<T> node = searchNode(root, key);
+        if (node == null) return null;
+        
+        if (node.left != null) {
+            return findMax(node.left).key;
+        }
+        
+        TreeNode<T> parent = node.parent;
+        while (parent != null && node == parent.left) {
+            node = parent;
+            parent = parent.parent;
+        }
+        return parent != null ? parent.key : null;
+    }
+    
+    /**
+     * Find successor of a given key.
+     * Time complexity: O(log N)
+     */
+    public T findSuccessor(T key) {
+        TreeNode<T> node = searchNode(root, key);
+        if (node == null) return null;
+        
+        if (node.right != null) {
+            return findMin(node.right).key;
+        }
+        
+        TreeNode<T> parent = node.parent;
+        while (parent != null && node == parent.right) {
+            node = parent;
+            parent = parent.parent;
+        }
+        return parent != null ? parent.key : null;
+    }
+    
+    /**
      * Range query: Find all elements between startKey and endKey (inclusive).
      * Time complexity: O(log N + k) where k is the number of results
      */
@@ -114,17 +335,14 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
             return;
         }
         
-        // If current node's key is greater than start, explore left subtree
         if (startKey.compareTo(node.key) < 0) {
             rangeQueryHelper(node.left, startKey, endKey, result);
         }
         
-        // If current node is in range, add it to result
         if (startKey.compareTo(node.key) <= 0 && endKey.compareTo(node.key) >= 0) {
             result.add(node.key);
         }
         
-        // If current node's key is less than end, explore right subtree
         if (endKey.compareTo(node.key) > 0) {
             rangeQueryHelper(node.right, startKey, endKey, result);
         }
@@ -149,8 +367,89 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
     }
     
     /**
+     * Get tree size.
+     */
+    public int size() {
+        return size;
+    }
+    
+    /**
+     * Check if tree is empty.
+     */
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    /**
+     * Validate Red-Black Tree properties.
+     * Returns true if tree satisfies all RBT properties.
+     */
+    public boolean validateTree() {
+        if (root == null) return true;
+        
+        // Property 2: Root must be black
+        if (root.color != NodeColor.BLACK) {
+            return false;
+        }
+        
+        // Check other properties and black height
+        return validateNode(root) != -1;
+    }
+    
+    private int validateNode(TreeNode<T> node) {
+        if (node == null) {
+            return 1; // Null nodes are black
+        }
+        
+        // Property 4: Red node cannot have red children
+        if (node.color == NodeColor.RED) {
+            if (getColor(node.left) == NodeColor.RED || getColor(node.right) == NodeColor.RED) {
+                return -1;
+            }
+        }
+        
+        // Property 5: All paths must have same black height
+        int leftBlackHeight = validateNode(node.left);
+        int rightBlackHeight = validateNode(node.right);
+        
+        if (leftBlackHeight == -1 || rightBlackHeight == -1 || leftBlackHeight != rightBlackHeight) {
+            return -1;
+        }
+        
+        return leftBlackHeight + (node.color == NodeColor.BLACK ? 1 : 0);
+    }
+    
+    /**
+     * Get black height of the tree.
+     */
+    public int getBlackHeight() {
+        return calculateBlackHeight(root);
+    }
+    
+    private int calculateBlackHeight(TreeNode<T> node) {
+        if (node == null) return 0;
+        
+        int height = calculateBlackHeight(node.left);
+        if (node.color == NodeColor.BLACK) {
+            height++;
+        }
+        return height;
+    }
+    
+    /**
+     * Get tree height.
+     */
+    public int getHeight() {
+        return calculateHeight(root);
+    }
+    
+    private int calculateHeight(TreeNode<T> node) {
+        if (node == null) return 0;
+        return 1 + Math.max(calculateHeight(node.left), calculateHeight(node.right));
+    }
+    
+    /**
      * Fix Red-Black Tree properties after insertion.
-     * Ensures the tree maintains balance and color properties.
      */
     private void fixInsert(TreeNode<T> node) {
         while (node.parent != null && node.parent.color == NodeColor.RED) {
@@ -160,64 +459,53 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
             if (parentNode == grandparentNode.left) {
                 TreeNode<T> uncleNode = grandparentNode.right;
                 
-                // Case 1: Uncle is red - recolor parent, uncle, and grandparent
                 if (uncleNode != null && uncleNode.color == NodeColor.RED) {
                     parentNode.color = NodeColor.BLACK;
                     uncleNode.color = NodeColor.BLACK;
                     grandparentNode.color = NodeColor.RED;
-                    node = grandparentNode; // Move up to grandparent
+                    node = grandparentNode;
                 } else {
-                    // Case 2: Node is right child - left rotation needed first
                     if (node == parentNode.right) {
                         node = parentNode;
                         rotateLeft(node);
                     }
-                    // Case 3: Node is left child - right rotation and recoloring
                     node.parent.color = NodeColor.BLACK;
                     node.parent.parent.color = NodeColor.RED;
                     rotateRight(node.parent.parent);
                 }
             } else {
-                // Mirror cases when parent is right child
                 TreeNode<T> uncleNode = grandparentNode.left;
                 
-                // Case 1: Uncle is red - recolor parent, uncle, and grandparent
                 if (uncleNode != null && uncleNode.color == NodeColor.RED) {
                     parentNode.color = NodeColor.BLACK;
                     uncleNode.color = NodeColor.BLACK;
                     grandparentNode.color = NodeColor.RED;
-                    node = grandparentNode; // Move up to grandparent
+                    node = grandparentNode;
                 } else {
-                    // Case 2: Node is left child - right rotation needed first
                     if (node == parentNode.left) {
                         node = parentNode;
                         rotateRight(node);
                     }
-                    // Case 3: Node is right child - left rotation and recoloring
                     node.parent.color = NodeColor.BLACK;
                     node.parent.parent.color = NodeColor.RED;
                     rotateLeft(node.parent.parent);
                 }
             }
         }
-        root.color = NodeColor.BLACK; // Ensure root is always black
+        root.color = NodeColor.BLACK;
     }
     
     /**
      * Perform left rotation on the given node.
-     * Before: node is parent of rightChild
-     * After: rightChild is parent of node
      */
     private void rotateLeft(TreeNode<T> node) {
         TreeNode<T> rightChild = node.right;
         
-        // Step 1: Turn right child's left subtree into node's right subtree
         node.right = rightChild.left;
         if (rightChild.left != null) {
             rightChild.left.parent = node;
         }
         
-        // Step 2: Link node's parent to rightChild
         rightChild.parent = node.parent;
         if (node.parent == null) {
             root = rightChild;
@@ -227,26 +515,21 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
             node.parent.right = rightChild;
         }
         
-        // Step 3: Put node as left child of rightChild
         rightChild.left = node;
         node.parent = rightChild;
     }
     
     /**
      * Perform right rotation on the given node.
-     * Before: node is parent of leftChild
-     * After: leftChild is parent of node
      */
     private void rotateRight(TreeNode<T> node) {
         TreeNode<T> leftChild = node.left;
         
-        // Step 1: Turn left child's right subtree into node's left subtree
         node.left = leftChild.right;
         if (leftChild.right != null) {
             leftChild.right.parent = node;
         }
         
-        // Step 2: Link node's parent to leftChild
         leftChild.parent = node.parent;
         if (node.parent == null) {
             root = leftChild;
@@ -256,7 +539,6 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
             node.parent.left = leftChild;
         }
         
-        // Step 3: Put node as right child of leftChild
         leftChild.right = node;
         node.parent = leftChild;
     }
