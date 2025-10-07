@@ -7,11 +7,15 @@ A professional forensic log analysis tool built in Java that uses Red-Black Tree
 
 ### Major Refactoring - v12.0
 - **Modular Architecture**: Completely restructured from monolithic file to professional package-based architecture
-- **Enhanced Red-Black Tree**: Implemented efficient `search()` and `rangeQuery()` operations for O(log N + k) time complexity
-- **New Feature**: Added "Query Logs by Time Range" menu option using efficient RBT range queries
+- **Complete Red-Black Tree**: Full implementation with insert, delete, search, min/max, predecessor/successor, range query, and validation
+- **Diverse Dataset**: 300 realistic log entries (100 high-threat, 80 medium-threat, 120 low-threat) with 55 geographic locations
+- **New Features**: 
+  - "Query Logs by Time Range" using efficient RBT range queries (O(log N + k))
+  - "Red-Black Tree Operations Demo" showcasing all RBT operations with performance metrics
+- **Enhanced Analysis**: Display all IPs with scores, top 10 risky IPs, and geographic hotspots
 - **Security Improvements**: Removed all external API dependencies and hardcoded keys
+- **Bug Fixes**: Fixed null pointer exception in RBT delete operation with proper null-safe guards
 - **Code Quality**: Improved error handling throughout - no silent exception catches
-- **Readable Implementation**: Expanded and documented RBT rotation methods with clear variable names
 
 ### Package Structure
 ```
@@ -63,7 +67,8 @@ The application runs automatically in the Replit environment. Default credential
 1. **Run Full Forensic Analysis** - Complete log analysis with threat detection
 2. **Trace IP Activity** - View all activity for a specific IP address
 3. **Query Logs by Time Range** - Efficiently retrieve logs in a time range (uses RBT range query)
-4. **Exit** - Close the application
+4. **Red-Black Tree Operations Demo** - Showcase all RBT operations with performance metrics
+5. **Exit** - Close the application
 
 ## Threat Scoring System
 - **0.30 points**: Confidential resource access
