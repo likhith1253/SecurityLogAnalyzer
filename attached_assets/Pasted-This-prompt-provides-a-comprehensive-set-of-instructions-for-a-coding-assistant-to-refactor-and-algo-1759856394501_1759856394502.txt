@@ -1,0 +1,36 @@
+This prompt provides a comprehensive set of instructions for a coding assistant to refactor and algorithmically correct your project to a resume-level standard, focusing on proper Red-Black Tree (RBT) implementation and robust software engineering.
+
+Coding Assistant Prompt: Security Log Analyzer Project Overhaul
+Context: The current project is a monolithic Java file (SecurityLogAnalyzer.java) for a forensic log analyzer. The core DSA requirement is to use a Red-Black Tree (RBT). However, the current implementation misuses the RBT, resulting in inefficient O(N) operations instead of the required O(log N) or O(log N + k) complexity.
+
+Goal: Completely revamp the entire project into a modular, professional, and algorithmically correct Java application, strictly adhering to object-oriented principles, code readability, and justified use of the Red-Black Tree.
+
+Phase 1: Mandatory Structural Refactoring
+De-monolith: Break the entire SecurityLogAnalyzer.java file into a professional package structure.
+
+Root Class: SecurityLogAnalyzer.java (only containing the main method).
+
+Package com.sla.app: Contains MainController.java and AppConfiguration.java.
+
+Package com.sla.model: Contains all data model classes: LogRecord.java, Geolocation.java, User.java, Role.java, ThreatIntelReport.java, ScanReport.java, BlockedIPAddress.java.
+
+Package com.sla.util: Contains utility classes: AnsiColors.java, ConsoleUIHelper.java, SimpleXorCipher.java, SampleDataGenerator.java, UserQueryLogger.java.
+
+Package com.sla.service: Contains core business logic: UserAuthService.java, UserAccessControl.java, AccessLogParser.java, BlacklistManager.java, ExternalIPChecker.java.
+
+Package com.sla.engine: Contains the core analysis and reporting: ThreatAnalysisEngine.java, ReportGenerator.java, LiveAlertCallback.java.
+
+Package com.sla.dsa: Contains the data structure: SelfBalancingSearchTree.java.
+
+Dependency Injection (Manual): Refactor MainController to manually inject its primary dependencies (like BlacklistManager, ThreatAnalysisEngine, etc.) into the runFullAnalysis method, instead of creating them inside the controller's constructor.
+
+Replace Concurrency Objects: Remove the unnecessary CopyOnWriteArrayList from AccessLogParser.parseLogs. Use a simple ArrayList as the logs are loaded in a single-threaded operation.
+
+Phase 2: Algorithmic (DSA) Correction and Enhancement (Red-Black Tree)
+The Red-Black Tree must be used efficiently to achieve its advertised time complexity.
+
+SelfBalancingSearchTree.java (com.sla.dsa package):
+
+Implement T search(T key): Add a standard O(log N) tree search method.
+
+Implement List<T> rangeQuery(T startKey, T endKey): Implement a function that returns all elements (logs) within a given range of keys (timestamps). This operation must maintain the RBT's efficiency, performing in O(log N + k) time, where k is the number of elements found. This is the new justified use case for log retrieval.
