@@ -17,6 +17,7 @@ import com.sla.util.SampleDataGenerator;
 import com.sla.util.UserQueryLogger;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -103,6 +104,10 @@ public class MainController {
         long startTime = System.currentTimeMillis();
 
         ConsoleUIHelper.printSectionTitle("PHASE 1: Initializing System");
+        File blacklistFile = new File(appConfig.getBlacklistFile());
+        if (blacklistFile.exists()) {
+            blacklistFile.delete();
+        }
         BlacklistManager blacklistManager = new BlacklistManager(appConfig.getBlacklistFile(), SECRET_KEY_FOR_CIPHER);
         Map<String, Geolocation> geoData = loadGeoData();
         List<Pattern> confidentialPatterns = loadConfidentialPatterns();
@@ -159,11 +164,87 @@ public class MainController {
             }
         }
 
+        System.out.println(AnsiColors.RED_BOLD + "\n=== MOST DANGEROUS IP ===" + AnsiColors.RESET);
+        if (!report.ipRiskScores.isEmpty()) {
+            String mostDangerousIP = null;
+            double highestScore = -1.0;
+            for (Map.Entry<String, Double> entry : report.ipRiskScores.entrySet()) {
+                if (entry.getValue() > highestScore) {
+                    highestScore = entry.getValue();
+                    mostDangerousIP = entry.getKey();
+                }
+            }
+            
+            if (mostDangerousIP != null) {
+                final String targetIP = mostDangerousIP;
+                Geolocation geo = report.ipToGeolocationMap.get(mostDangerousIP);
+                long intrusionCount = logRecords.stream()
+                    .filter(log -> log.ipSourceAddress.equals(targetIP))
+                    .count();
+                
+                System.out.println(String.format("  IP Address: %s", 
+                    ConsoleUIHelper.formatIPForDisplay(mostDangerousIP, accessControl, false)));
+                System.out.println(String.format("  Location: %s", 
+                    geo != null ? geo.city + ", " + geo.country : "Unknown"));
+                System.out.println(String.format("  Threat Score: %.2f", highestScore));
+                System.out.println(String.format("  Total Intrusions: %d", intrusionCount));
+            }
+        }
 
         ConsoleUIHelper.printSectionTitle("PHASE 5: Generating Detailed Report File");
         ReportGenerator reportGenerator = new ReportGenerator(appConfig.getReportFile(), accessControl, confidentialPatterns);
         reportGenerator.generate(report, analysisEngine);
         System.out.println(AnsiColors.GREEN_BOLD + "\n✔ Analysis complete. Detailed report saved to '" + appConfig.getReportFile() + "'." + AnsiColors.RESET);
+
+        System.out.println(AnsiColors.CYAN_BOLD + "\n=== ALL BLACKLISTED IPs ===" + AnsiColors.RESET);
+        if (!report.finalBlacklist.isEmpty()) {
+            for (String ip : report.finalBlacklist) {
+                Geolocation geo = report.ipToGeolocationMap.get(ip);
+                double score = report.ipRiskScores.getOrDefault(ip, 0.0);
+                final String targetIP = ip;
+                long requestCount = logRecords.stream()
+                    .filter(log -> log.ipSourceAddress.equals(targetIP))
+                    .count();
+                
+                System.out.println(String.format("  • %s (%s) - Threat Score: %.2f | Requests: %d",
+                    ConsoleUIHelper.formatIPForDisplay(ip, accessControl, false),
+                    geo != null ? geo.city + ", " + geo.country : "Unknown",
+                    score,
+                    requestCount
+                ));
+            }
+        } else {
+            System.out.println(AnsiColors.GREEN + "  No IPs were blacklisted." + AnsiColors.RESET);
+        }
+
+        System.out.println(AnsiColors.CYAN_BOLD + "\n=== IP WITH MOST REQUESTS ===" + AnsiColors.RESET);
+        Map<String, Long> requestCounts = new HashMap<>();
+        for (LogRecord log : logRecords) {
+            requestCounts.merge(log.ipSourceAddress, 1L, Long::sum);
+        }
+        
+        if (!requestCounts.isEmpty()) {
+            String mostActiveIP = null;
+            long maxRequests = 0;
+            for (Map.Entry<String, Long> entry : requestCounts.entrySet()) {
+                if (entry.getValue() > maxRequests) {
+                    maxRequests = entry.getValue();
+                    mostActiveIP = entry.getKey();
+                }
+            }
+            
+            if (mostActiveIP != null) {
+                Geolocation geo = report.ipToGeolocationMap.get(mostActiveIP);
+                double score = report.ipRiskScores.getOrDefault(mostActiveIP, 0.0);
+                
+                System.out.println(String.format("  IP Address: %s", 
+                    ConsoleUIHelper.formatIPForDisplay(mostActiveIP, accessControl, false)));
+                System.out.println(String.format("  Location: %s", 
+                    geo != null ? geo.city + ", " + geo.country : "Unknown"));
+                System.out.println(String.format("  Threat Score: %.2f", score));
+                System.out.println(String.format("  Total Requests: %d", maxRequests));
+            }
+        }
 
         blacklistManager.saveBlacklist();
         saveSuspiciousList(report.finalSuspiciousIps);

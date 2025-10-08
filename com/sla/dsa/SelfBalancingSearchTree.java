@@ -98,27 +98,48 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
     private void deleteNode(TreeNode<T> node) {
         TreeNode<T> replacement;
         TreeNode<T> child;
+        TreeNode<T> fixNode;
+        TreeNode<T> fixParent;
+        boolean fixIsLeft;
         NodeColor originalColor = node.color;
         
         if (node.left == null) {
             child = node.right;
+            fixNode = child;
+            fixParent = node.parent;
+            fixIsLeft = (fixParent != null && node == fixParent.left);
             transplant(node, node.right);
-            if (child != null && originalColor == NodeColor.BLACK) {
-                fixDelete(child);
+            if (originalColor == NodeColor.BLACK) {
+                if (fixNode != null) {
+                    fixDelete(fixNode);
+                } else if (fixParent != null) {
+                    fixDeleteWithNullChild(fixParent, fixIsLeft);
+                }
             }
         } else if (node.right == null) {
             child = node.left;
+            fixNode = child;
+            fixParent = node.parent;
+            fixIsLeft = (fixParent != null && node == fixParent.left);
             transplant(node, node.left);
-            if (child != null && originalColor == NodeColor.BLACK) {
-                fixDelete(child);
+            if (originalColor == NodeColor.BLACK) {
+                if (fixNode != null) {
+                    fixDelete(fixNode);
+                } else if (fixParent != null) {
+                    fixDeleteWithNullChild(fixParent, fixIsLeft);
+                }
             }
         } else {
             replacement = findMin(node.right);
             originalColor = replacement.color;
             child = replacement.right;
+            fixParent = replacement.parent;
+            fixIsLeft = (replacement.parent != null && replacement == replacement.parent.left);
             
             if (replacement.parent == node) {
                 if (child != null) child.parent = replacement;
+                fixParent = replacement;
+                fixIsLeft = false;
             } else {
                 transplant(replacement, replacement.right);
                 replacement.right = node.right;
@@ -134,8 +155,108 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
             }
             replacement.color = node.color;
             
-            if (child != null && originalColor == NodeColor.BLACK) {
-                fixDelete(child);
+            if (originalColor == NodeColor.BLACK) {
+                if (child != null) {
+                    fixDelete(child);
+                } else if (fixParent != null) {
+                    fixDeleteWithNullChild(fixParent, fixIsLeft);
+                }
+            }
+        }
+    }
+    
+    private void fixDeleteWithNullChild(TreeNode<T> parent, boolean childWasLeft) {
+        TreeNode<T> sibling;
+        
+        while (parent != null) {
+            if (childWasLeft) {
+                sibling = parent.right;
+                
+                if (getColor(sibling) == NodeColor.RED) {
+                    sibling.color = NodeColor.BLACK;
+                    parent.color = NodeColor.RED;
+                    rotateLeft(parent);
+                    sibling = parent.right;
+                }
+                
+                if (sibling == null) {
+                    if (parent == root || getColor(parent) == NodeColor.RED) {
+                        parent.color = NodeColor.BLACK;
+                        return;
+                    }
+                    childWasLeft = (parent.parent != null && parent == parent.parent.left);
+                    parent = parent.parent;
+                } else if (getColor(sibling.left) == NodeColor.BLACK && 
+                    getColor(sibling.right) == NodeColor.BLACK) {
+                    sibling.color = NodeColor.RED;
+                    if (getColor(parent) == NodeColor.RED) {
+                        parent.color = NodeColor.BLACK;
+                        return;
+                    }
+                    if (parent == root) {
+                        return;
+                    }
+                    childWasLeft = (parent.parent != null && parent == parent.parent.left);
+                    parent = parent.parent;
+                } else {
+                    if (getColor(sibling.right) == NodeColor.BLACK) {
+                        if (sibling.left != null) sibling.left.color = NodeColor.BLACK;
+                        sibling.color = NodeColor.RED;
+                        rotateRight(sibling);
+                        sibling = parent.right;
+                    }
+                    if (sibling != null) {
+                        sibling.color = parent.color;
+                        parent.color = NodeColor.BLACK;
+                        if (sibling.right != null) sibling.right.color = NodeColor.BLACK;
+                        rotateLeft(parent);
+                    }
+                    return;
+                }
+            } else {
+                sibling = parent.left;
+                
+                if (getColor(sibling) == NodeColor.RED) {
+                    sibling.color = NodeColor.BLACK;
+                    parent.color = NodeColor.RED;
+                    rotateRight(parent);
+                    sibling = parent.left;
+                }
+                
+                if (sibling == null) {
+                    if (parent == root || getColor(parent) == NodeColor.RED) {
+                        parent.color = NodeColor.BLACK;
+                        return;
+                    }
+                    childWasLeft = (parent.parent != null && parent == parent.parent.left);
+                    parent = parent.parent;
+                } else if (getColor(sibling.right) == NodeColor.BLACK && 
+                    getColor(sibling.left) == NodeColor.BLACK) {
+                    sibling.color = NodeColor.RED;
+                    if (getColor(parent) == NodeColor.RED) {
+                        parent.color = NodeColor.BLACK;
+                        return;
+                    }
+                    if (parent == root) {
+                        return;
+                    }
+                    childWasLeft = (parent.parent != null && parent == parent.parent.left);
+                    parent = parent.parent;
+                } else {
+                    if (getColor(sibling.left) == NodeColor.BLACK) {
+                        if (sibling.right != null) sibling.right.color = NodeColor.BLACK;
+                        sibling.color = NodeColor.RED;
+                        rotateLeft(sibling);
+                        sibling = parent.left;
+                    }
+                    if (sibling != null) {
+                        sibling.color = parent.color;
+                        parent.color = NodeColor.BLACK;
+                        if (sibling.left != null) sibling.left.color = NodeColor.BLACK;
+                        rotateRight(parent);
+                    }
+                    return;
+                }
             }
         }
     }

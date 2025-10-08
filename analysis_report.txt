@@ -3,7 +3,7 @@ SECURITY LOG ANALYSIS REPORT
 ================================================================================
 
 --- PERFORMANCE METRICS ---
-  Total Analysis Time: 0.13 seconds
+  Total Analysis Time: 0.05 seconds
   Logs Processed: 300
 
 --- BLACKLIST SUMMARY ---

@@ -132,26 +132,38 @@ public class SampleDataGenerator {
     }
 
     private static void generateLogsFile(String filePath) {
-        if (new File(filePath).exists()) {
-            return;
+        File logFile = new File(filePath);
+        if (logFile.exists()) {
+            logFile.delete();
         }
 
-        // Create diverse IP addresses with different threat profiles
-        String[] highThreatIPs = {
-            "45.142.120.66", "91.219.236.144", "89.248.165.97",
-            "103.253.145.88", "221.194.47.123", "125.214.87.156"
+        // Generate random IP addresses for different threat profiles
+        String[] ipPrefixes = {
+            "45.142.120", "91.219.236", "89.248.165", "103.253.145", 
+            "221.194.47", "125.214.87", "185.220.101", "193.239.147",
+            "104.244.42", "178.62.193", "195.123.220", "139.59.10",
+            "167.94.138", "198.98.54", "51.89.115", "159.89.214",
+            "142.93.125", "188.166.89", "192.168.1", "10.0.0", "172.16.5"
         };
+        
+        // Generate unique random IPs for this run
+        String[] highThreatIPs = new String[20];
+        for (int i = 0; i < highThreatIPs.length; i++) {
+            String prefix = ipPrefixes[random.nextInt(ipPrefixes.length)];
+            highThreatIPs[i] = prefix + "." + (random.nextInt(200) + 1);
+        }
 
-        String[] mediumThreatIPs = {
-            "185.220.101.42", "193.239.147.22", "104.244.42.88",
-            "178.62.193.55", "195.123.220.77", "139.59.10.99"
-        };
+        String[] mediumThreatIPs = new String[25];
+        for (int i = 0; i < mediumThreatIPs.length; i++) {
+            String prefix = ipPrefixes[random.nextInt(ipPrefixes.length)];
+            mediumThreatIPs[i] = prefix + "." + (random.nextInt(200) + 1);
+        }
 
-        String[] lowThreatIPs = {
-            "167.94.138.12", "198.98.54.23", "51.89.115.45",
-            "159.89.214.67", "142.93.125.34", "188.166.89.21",
-            "192.168.1.10", "10.0.0.5", "172.16.5.88"
-        };
+        String[] lowThreatIPs = new String[30];
+        for (int i = 0; i < lowThreatIPs.length; i++) {
+            String prefix = ipPrefixes[random.nextInt(ipPrefixes.length)];
+            lowThreatIPs[i] = prefix + "." + (random.nextInt(200) + 1);
+        }
 
         String[] normalUsers = {"alice", "bob", "charlie", "david", "emma"};
         String[] methods = {"GET", "POST", "PUT", "DELETE", "PATCH"};
