@@ -5,16 +5,25 @@ A professional forensic log analysis tool built in Java that uses Red-Black Tree
 
 ## Recent Changes (October 2025)
 
+### Latest Updates - v12.1 (October 8, 2025)
+- **Randomized Data Generation**: Logs are now regenerated with random IPs each run for varied blacklist results
+  - 20 random high-threat IPs, 25 medium-threat IPs, 30 low-threat IPs per run
+  - Fresh blacklist on each analysis for different threat patterns
+- **Enhanced Reporting**: After Phase 5, displays:
+  - All blacklisted IPs with threat scores and request counts
+  - IP with most requests along with location, threat score, and total requests
+  - Most dangerous IP with intrusion count
+- **Red-Black Tree Fix**: Corrected critical bug in black leaf deletion with proper double-black handling
+- **100,000 Log Entries**: Processes 100,000 diverse logs for comprehensive analysis
+
 ### Major Refactoring - v12.0
 - **Modular Architecture**: Completely restructured from monolithic file to professional package-based architecture
 - **Complete Red-Black Tree**: Full implementation with insert, delete, search, min/max, predecessor/successor, range query, and validation
-- **Diverse Dataset**: 300 realistic log entries (100 high-threat, 80 medium-threat, 120 low-threat) with 55 geographic locations
 - **New Features**: 
   - "Query Logs by Time Range" using efficient RBT range queries (O(log N + k))
   - "Red-Black Tree Operations Demo" showcasing all RBT operations with performance metrics
 - **Enhanced Analysis**: Display all IPs with scores, top 10 risky IPs, and geographic hotspots
 - **Security Improvements**: Removed all external API dependencies and hardcoded keys
-- **Bug Fixes**: Fixed null pointer exception in RBT delete operation with proper null-safe guards
 - **Code Quality**: Improved error handling throughout - no silent exception catches
 
 ### Package Structure
