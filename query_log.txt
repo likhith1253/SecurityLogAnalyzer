@@ -16,3 +16,10 @@
 2025-09-30T17:41:10.813374300 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
 2025-10-07T17:11:32.850444929 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
 2025-10-07T18:55:19.591939659 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
+2025-10-07T18:57:36.254378362 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
+2025-10-07T18:58:37.089673400 | UserID: ADM-01 | Query: Traced IP: 159.89.214.67
+2025-10-07T19:09:25.820181300 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
+2025-10-07T19:12:37.157436200 | UserID: ADM-01 | Query: Demonstrated Red-Black Tree Operations
+2025-10-07T19:21:36.227410600 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
+2025-10-08T03:06:40.944563200 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
+2025-10-08T03:06:49.517987700 | UserID: ADM-01 | Query: Demonstrated Red-Black Tree Operations
