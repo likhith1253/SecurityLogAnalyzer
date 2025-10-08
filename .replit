@@ -21,9 +21,9 @@ args = "Security Log Analyzer"
 name = "Security Log Analyzer"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "java SecurityLogAnalyzer"
-
-[workflows.workflow.metadata]
-outputType = "console"
