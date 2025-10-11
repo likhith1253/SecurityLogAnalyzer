@@ -43,10 +43,7 @@ public class SelfBalancingSearchTree<T extends Comparable<T>> {
         this.size = 0;
     }
     
-    /**
-     * Insert a new element into the tree.
-     * Time complexity: O(log N)
-     */
+    
     public void insert(T key) {
         TreeNode<T> newNode = new TreeNode<>(key);
         

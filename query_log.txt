@@ -1,29 +1,3 @@
-2025-09-27T17:13:39.992108600 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-27T17:14:28.235092400 | UserID: ADM-01 | Query: Traced IP: 202.54.1.20
-2025-09-29T15:46:40.470522300 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-29T15:59:30.556580800 | UserID: ADM-01 | Query: Traced IP: 81.169.144.180
-2025-09-29T16:21:14.766701200 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-29T16:32:45.518012600 | UserID: ADM-01 | Query: Traced IP: 202.54.1.118
-2025-09-29T16:44:09.783727900 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-29T17:07:51.097952200 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-29T17:24:51.266188600 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-29T17:28:42.242721900 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-29T17:37:06.634753400 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-30T17:28:16.756145 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-30T17:31:31.237610200 | UserID: ADM-01 | Query: Traced IP: 81.169.144.51
-2025-09-30T17:34:38.390939500 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-30T17:38:56.318800 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-09-30T17:41:10.813374300 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-07T17:11:32.850444929 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-07T18:55:19.591939659 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-07T18:57:36.254378362 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-07T18:58:37.089673400 | UserID: ADM-01 | Query: Traced IP: 159.89.214.67
-2025-10-07T19:09:25.820181300 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-07T19:12:37.157436200 | UserID: ADM-01 | Query: Demonstrated Red-Black Tree Operations
-2025-10-07T19:21:36.227410600 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-08T03:06:40.944563200 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-08T03:06:49.517987700 | UserID: ADM-01 | Query: Demonstrated Red-Black Tree Operations
-2025-10-08T03:23:30.116864237 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-08T03:29:43.084506789 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
-2025-10-08T03:30:05.924374372 | UserID: ADM-01 | Query: Demonstrated Red-Black Tree Operations
-2025-10-08T03:32:57.089420500 | UserID: ADM-01 | Query: Ran Full Forensic Analysis
+version https://git-lfs.github.com/spec/v1
+oid sha256:836dcd4c32487787ae1ef01f646505e325da60542563a52228d58337d8b784c0
+size 3933

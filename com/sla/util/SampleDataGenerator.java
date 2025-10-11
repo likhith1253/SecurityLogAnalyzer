@@ -139,7 +139,7 @@ public class SampleDataGenerator {
 
         // Generate random IP addresses for different threat profiles
         String[] ipPrefixes = {
-            "45.142.120", "91.219.236", "89.248.165", "103.253.145", 
+            "45.142.120", "91.219.236", "89.248.165", "103.253.145",
             "221.194.47", "125.214.87", "185.220.101", "193.239.147",
             "104.244.42", "178.62.193", "195.123.220", "139.59.10",
             "167.94.138", "198.98.54", "51.89.115", "159.89.214",
@@ -186,9 +186,12 @@ public class SampleDataGenerator {
         };
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            LocalDateTime baseTime = LocalDateTime.now().minusHours(24 * 30); // A month of logs
+            LocalDateTime baseTime = LocalDateTime.now().withNano(0).minusHours(24 * 30); // A month of logs, truncated to seconds
             int logCount = 0;
-            int totalLogs = 100000;
+            
+            // --- MODIFIED LINE ---
+            // Increased total logs to 3 million to slow down the analysis.
+            int totalLogs = 3000000;
 
             // Proportional distribution
             int highThreatCount = (int) (totalLogs * 0.33);
