@@ -22,7 +22,9 @@ This guide provides instructions for setting up the Security Log Analyzer (SLA) 
 3. **Compilation**
    Compile the source code from the project root:
    ```bash
-   javac -encoding UTF-8 -d . SecurityLogAnalyzer.java com/sla/app/*.java com/sla/dsa/*.java com/sla/engine/*.java com/sla/model/*.java com/sla/service/*.java com/sla/util/*.java
+   mkdir out
+   javac -encoding UTF-8 -d out SecurityLogAnalyzer.java com/sla/*/*.java
+   java -cp out SecurityLogAnalyzer
    ```
 
 ## Configuration
@@ -31,10 +33,11 @@ The system behavior can be tuned in `config.properties`:
 
 | Property | Description | Default |
 | :--- | :--- | :--- |
-| `threat_score_threshold` | Score (0.0 - 1.0) above which an IP is blacklisted | `0.85` |
-| `log_file_path` | Path to the source log file for analysis | `sample.log` |
-| `report_output_file` | Destination for the generated forensic report | `security_report.txt` |
-| `users_file` | CSV file containing authorized analyzer users | `users.csv` |
+| `threat.score.threshold` | Score (0.0 - 1.0) above which an IP is blacklisted | `0.85` |
+| `log.file` | Log file to analyze (regenerated with random sample data on each start) | `logs.txt` |
+| `report.file` | Destination for the generated forensic report | `analysis_report.txt` |
+| `users.file` | CSV of users with PBKDF2 password hashes | `users.csv` |
+| `blacklist.file`, `suspicious.file`, `query.log.file` | Runtime output files | see `config.properties` |
 
 ## Supplying Log Files
 

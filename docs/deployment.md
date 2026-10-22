@@ -38,12 +38,12 @@ java -Dthread_threshold=${THREAT_LIMIT:-0.85} SecurityLogAnalyzer
 ```
 
 ### 3. Output Consumption
-The generated `security_report.txt` is designed to be parsed by other tools. Its structured "SUMMARY" sections can be indexed by ELK (Elasticsearch, Logstash, Kibana) or Splunk for long-term trend analysis.
+The generated `analysis_report.txt` is designed to be parsed by other tools. Its structured "SUMMARY" sections can be indexed by ELK (Elasticsearch, Logstash, Kibana) or Splunk for long-term trend analysis.
 
 ## Security Considerations
 
-- **Credential Safety**: Avoid hardcoding passwords in `users.csv` for production. Implement a secure hashing mechanism or interface with an LDAP/OIDC provider.
-- **File Permissions**: Ensure that the `blacklist.txt` and `security_report.txt` files have restricted permissions to prevent tampering.
+- **Credential Safety**: `users.csv` stores salted PBKDF2 hashes (generate one with `java -cp out com.sla.util.PasswordHasher <password>`); plaintext entries are rejected. The bundled demo accounts are for local use only; for anything real, interface with an LDAP/OIDC provider.
+- **File Permissions**: Ensure that the `blacklist.txt` and `analysis_report.txt` files have restricted permissions to prevent tampering.
 - **Resource Limits**: For extremely high-volume logs (GBs per hour), increase the JVM heap size:
   ```bash
   java -Xmx2g SecurityLogAnalyzer

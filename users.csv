@@ -1,4 +1,4 @@
 username,password,role,userId
-admin,adminpass,ADMIN,ADM-01
-investigator,investigatorpass,INVESTIGATOR,INV-01
-auditor,auditorpass,AUDITOR,AUD-01
+admin,pbkdf2$120000$o1DYLfsAfIqDUw5imSWIwQ==$PgN/V9+7skq5lVbv8VmNV/kDa+ecfxkB/t22MSccY4c=,ADMIN,ADM-01
+investigator,pbkdf2$120000$zkJH12yM7gpv68GopDzGbA==$TmdIvJ5/eD4J8fDb4B/M1e57VgQUQ0hcPjzt8Zpc2yY=,INVESTIGATOR,INV-01
+auditor,pbkdf2$120000$pgscGwZEoU8ONnhVLExQWQ==$DkdQzm/o8xZ+3eqYNM3LOWcEbMwM/YciHtvzPrTokgE=,AUDITOR,AUD-01

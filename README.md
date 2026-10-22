@@ -1,83 +1,70 @@
-# 🕵️ Security Log Analyzer (SLA)
+# Security Log Analyzer (SLA)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/badge/Build-Standard-success)](https://github.com/likhith1253/SecurityLogAnalyzer)
-[![Recruiter Ready](https://img.shields.io/badge/Documentation-Complete-brightgreen)](docs/)
+A Java console application that scans web-server access logs for suspicious activity. It scores each source IP with a simple heuristic (status codes, sensitive paths, attack-pattern matches, IP geolocation), blacklists IPs above a threshold, and writes a forensic report. Log records are indexed in a hand-written Red-Black Tree, which backs the time-range and IP-trace queries.
 
-## Project Overview
+It is a coursework / learning project (data structures + security concepts), not a production SIEM.
 
-**Security Log Analyzer (SLA)** is a high-performance forensic tool designed to automate the detection of cyber threats within server access logs. By combining heuristic risk scoring with efficient data structures like Red-Black Trees, SLA enables security investigators to identify malicious actors, trace attack vectors, and enforce real-time IP blacklisting with minimal manual intervention.
+## Features
 
-## 🚀 Key Value Proposition
-- **Automated Intelligence**: Converts raw, noisy log data into actionable threat intelligence.
-- **Sub-Second Performance**: Leverages self-balancing trees for efficient querying of massive datasets.
-- **Forensic Accuracy**: Detects sophisticated attack patterns beyond simple status code monitoring.
+- Heuristic threat scoring with a configurable threshold (`threat.score.threshold` in `config.properties`)
+- Pattern matching for configured "confidential data" requests (`confidential_data_requests.txt`)
+- IP-prefix geolocation lookup from `geo_data.csv`
+- Dynamic blacklist persisted to `blacklist.txt` (XOR-obfuscated; see limitations)
+- Queries: trace one IP's history, list events in a time range, Red-Black Tree operations demo
+- Role-based access: `AUDITOR` sees redacted IPs, `INVESTIGATOR` and `ADMIN` see full data
+- Per-user query audit log (`query_log.txt`)
+- Self-written Red-Black Tree (`com/sla/dsa/SelfBalancingSearchTree.java`): insert, delete, search, range query, predecessor/successor, validity check
 
-## 🛠️ Tech Stack
+## Requirements
 
-| Component | Technology |
-| :--- | :--- |
-| **Language** | Java 11+ |
-| **Data Structures** | Red-Black Tree (Self-Balancing BST) |
-| **Core Engine** | Heuristic Threat Analysis System |
-| **Security** | XOR Encryption, Role-Based Access Control |
-| **Configuration** | Properties-based Environment Tuning |
+JDK 11 or newer. No third-party dependencies.
 
-## 🏗️ High-Level Architecture
-
-The system follows a Pipeline-and-Filter architecture, transforming raw logs into structured insights.
-
-1. **Ingestion**: Standardized parsing of log formats.
-2. **Analysis**: Scoring engine evaluates risk based on resource sensitivity and attack signatures.
-3. **Database**: Persistent storage for blacklists and suspicious IP history.
-4. **Reporting**: Multi-format reporting for forensic evidence.
-
-> [!IMPORTANT]
-> For a deep dive into the system design, view the [Full Architecture Documentation](docs/architecture.md).
-
-## 📊 Visual Processing Flow
-
-```mermaid
-graph LR
-    Log[Raw Logs] --> Parser[AccessLogParser]
-    Parser --> Index[RBT Indexer]
-    Index --> Engine[Threat Engine]
-    Engine --> Alert[Live Alerts]
-    Engine --> Report[Forensic Report]
-```
-
-## 👣 Quick Start Summary
+## Build and run
 
 ```bash
-# Compile and Run
-javac -encoding UTF-8 -d . SecurityLogAnalyzer.java com/sla/app/*.java ...
-java SecurityLogAnalyzer
-
-# Log in (Default credentials available in users.csv)
-# Username: admin
-# Password: adminpass
+mkdir out
+javac -encoding UTF-8 -d out SecurityLogAnalyzer.java com/sla/*/*.java
+java -cp out SecurityLogAnalyzer
 ```
 
-See [Setup Guide](docs/setup.md) for detailed installation steps.
+Run it from the repository root: configuration files are read from the working directory. On start it generates a random sample `logs.txt` (regenerated on every run and potentially very large, so it is git-ignored).
 
-## 🛡️ Real-World Usage Example
+Demo accounts shipped in `users.csv` (local demo only):
 
-During a simulated SQL injection attempt, the analyzer identified a malicious IP from a known high-risk range, assigned it a risk score of 0.95, and blocked it before the attack escalated.
+| user | password | role |
+|---|---|---|
+| `admin` | `adminpass` | ADMIN |
+| `investigator` | `investigatorpass` | INVESTIGATOR |
+| `auditor` | `auditorpass` | AUDITOR |
 
-```text
-🚨 LIVE ALERT: IP 192.168.1.10 crossed threat threshold!
-- Detected Path: /api/users?id=1' OR '1'='1
-- Action: IP added to dynamic blacklist.
+Passwords are stored as salted PBKDF2-HMAC-SHA256 hashes. To add a user, generate a hash and append a line to `users.csv` (`username,hash,ROLE,userId`):
+
+```bash
+java -cp out com.sla.util.PasswordHasher 'a-new-password'
 ```
 
-## 📬 Contact & Portfolio
+Entries with plaintext passwords are rejected at load time.
 
-- **GitHub Repository**: [SecurityLogAnalyzer](https://github.com/likhith1253/SecurityLogAnalyzer)
-- **LinkedIn**: [Your Profile Link]
-- **Documentation Credits**: Technical Documentation Engineer Assistant
+## Tests
 
-## 🔮 Future Enhancements
-- [ ] Integration with ELK Stack (Elasticsearch/Logstash/Kibana).
-- [ ] Support for JSON/Structured logging formats.
-- [ ] Machine Learning based anomaly detection for zero-day threats.
-- [ ] Web Dashboard for interactive visualization.
+```bash
+mkdir out
+javac -encoding UTF-8 -d out $(find . -name '*.java')
+java -cp out com.sla.SlaTests
+```
+
+11 tests with a small dependency-free runner (`test/com/sla/SlaTests.java`): password hashing and login, query-log forging prevention, XOR cipher and blacklist persistence, Red-Black Tree invariants under random insert/delete, range queries, log parsing, and IP redaction by role. CI runs the same commands (`.github/workflows/ci.yml`).
+
+## Documentation
+
+[Architecture](docs/architecture.md) | [Features](docs/features.md) | [Setup](docs/setup.md) | [Log processing flow](docs/log_processing_flow.md) | [Usage examples](docs/usage_examples.md) | [Evaluation](docs/evaluation.md) | [Deployment notes](docs/deployment.md)
+
+## Known limitations
+
+- The blacklist file is protected only by a repeating-key XOR (obfuscation, not encryption). The default key is in the source; set the `SLA_CIPHER_KEY` environment variable to use another one.
+- Log records are ordered in the tree by timestamp only, so a lookup by timestamp returns one of possibly several records sharing that timestamp.
+- The login prompt is a local console prompt; there is no network service, session handling or lockout beyond 3 attempts per start.
+
+## License
+
+[MIT](LICENSE) (c) Likhith Ponnada

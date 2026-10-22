@@ -27,9 +27,10 @@ public class SampleDataGenerator {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("username,password,role,userid\n");
-            writer.write("admin,admin123,ADMIN,ADM001\n");
-            writer.write("investigator,inv123,INVESTIGATOR,INV001\n");
-            writer.write("auditor,audit123,AUDITOR,AUD001\n");
+            // Demo accounts (passwords: admin123 / inv123 / audit123), stored as PBKDF2 hashes.
+            writer.write("admin," + PasswordHasher.hash("admin123") + ",ADMIN,ADM001\n");
+            writer.write("investigator," + PasswordHasher.hash("inv123") + ",INVESTIGATOR,INV001\n");
+            writer.write("auditor," + PasswordHasher.hash("audit123") + ",AUDITOR,AUD001\n");
         } catch (IOException e) {
             System.err.println(AnsiColors.RED + "Warning: Could not generate " + filePath + ": " + e.getMessage() + AnsiColors.RESET);
         }

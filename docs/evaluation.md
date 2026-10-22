@@ -26,20 +26,12 @@ The system utilizes highly optimized components to handle large datasets:
     - Log records are stored as lightweight objects.
     - Geolocation data is cached in a Hash Map to avoid redundant calculations.
 
-## 3. Real-world Benchmarks (Sample)
+## 3. Measurements and tests
 
-| Log Size | Compilation Time | Analysis Time | Memory Usage (Peak) |
-| :--- | :--- | :--- | :--- |
-| 1,000 logs | 1.2s | 0.05s | ~45MB |
-| 10,000 logs | 1.2s | 0.42s | ~120MB |
-| 50,000 logs | 1.2s | 1.85s | ~450MB |
+No benchmark figures are published for this project. The earlier table of timings/memory in this file was illustrative and not backed by recorded measurements, so it was removed.
 
-> [!NOTE]
-> Performance results vary based on system hardware and the complexity of the custom detection patterns loaded from `confidential_data_requests.txt`.
-
-## 4. Test Results
-
-The system undergoes rigorous validation:
-- **Tree Integrity Test**: Validates Red-Black Tree properties (root is black, no consecutive red nodes, consistent black height) after every 1,000 insertions.
-- **Log Parsing Accuracy**: Verified against standard Nginx/Apache log formats.
-- **Persistence Verification**: Ensures blacklists are correctly encrypted/decrypted and saved to disk.
+What is verified today (`java -cp out com.sla.SlaTests`, see the README):
+- Red-Black Tree validity and ordering after randomized inserts and deletes
+- Log parsing of valid and malformed lines
+- Blacklist persistence round-trip
+- Password hashing, login and role-based IP redaction

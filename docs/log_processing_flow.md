@@ -45,7 +45,7 @@ The `ReportGenerator` compiles all data points into a final forensic document, h
 
 ## Data Flow Diagram
 
-[Log Flow Diagram](file:///d:/SecurityLogAnalyzer/docs/images/log_flow_diagram.md)
+[Log Flow Diagram](images/log_flow_diagram.md)
 
 ```mermaid
 sequenceDiagram

@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5c9fc8289bc64228a71877239e228349b456d6921d59c599e09deda4848b3b99
-size 80
+.*secret.*
+.*passwd.*
+.*confidential.*
+.*admin.*
+.*config.*
+/api/v1/credentials

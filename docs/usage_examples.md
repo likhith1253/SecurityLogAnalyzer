@@ -35,7 +35,6 @@ Newly Blocked IPs: 1
   Total Intrusions: 12
 ```
 
-![Sample Report Screenshot](file:///d:/SecurityLogAnalyzer/docs/images/sample_output_report.png)
 
 ## 2. Tracing IP Activity
 

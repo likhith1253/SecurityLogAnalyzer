@@ -18,11 +18,16 @@ public class UserQueryLogger {
     
     public void log(User user, String query) {
         String logEntry = String.format("%s | UserID: %s | Query: %s%n",
-            LocalDateTime.now(ZoneOffset.UTC), user.userId, query);
+            LocalDateTime.now(ZoneOffset.UTC), sanitize(user.userId), sanitize(query));
         try {
             Files.writeString(logPath, logEntry, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             System.err.println(AnsiColors.RED + "Error writing to query log: " + e.getMessage() + AnsiColors.RESET);
         }
+    }
+
+    /** Prevents log forging: user-supplied text must not be able to start a new log line. */
+    public static String sanitize(String value) {
+        return value == null ? "" : value.replaceAll("[\r\n]+", " ");
     }
 }

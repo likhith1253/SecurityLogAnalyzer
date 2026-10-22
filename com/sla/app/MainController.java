@@ -39,7 +39,11 @@ public class MainController {
     private final AppConfiguration appConfig;
     private User currentUser;
     private final Scanner scanner = new Scanner(System.in);
-    private final String SECRET_KEY_FOR_CIPHER = "SECRET_KEY_FOR_FLA_v11";
+    // XOR obfuscation key for the blacklist file. Override with the SLA_CIPHER_KEY environment variable.
+    // Note: XOR is obfuscation, not encryption.
+    private final String SECRET_KEY_FOR_CIPHER =
+        System.getenv("SLA_CIPHER_KEY") != null && !System.getenv("SLA_CIPHER_KEY").isEmpty()
+            ? System.getenv("SLA_CIPHER_KEY") : "SECRET_KEY_FOR_FLA_v11";
 
     public MainController() {
         this.appConfig = new AppConfiguration("config.properties");

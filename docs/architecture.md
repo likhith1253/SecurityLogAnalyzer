@@ -24,7 +24,7 @@ Generates human-readable insights and machine-readable data.
 
 The following diagram illustrates how the components interact during a forensic analysis:
 
-[Architecture Diagram](file:///d:/SecurityLogAnalyzer/docs/images/architecture_diagram.md)
+[Architecture Diagram](images/architecture_diagram.md)
 
 ```mermaid
 graph TD
